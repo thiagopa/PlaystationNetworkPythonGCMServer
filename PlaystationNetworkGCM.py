@@ -1,28 +1,35 @@
 # -*- coding: utf-8 -*-
-import cgi
 import webapp2
 
-from google.appengine.api import users
+from DataStore import DataStore
 
-class MainPage(webapp2.RequestHandler):
-    def get(self):
-        self.response.out.write("""
-          <html>
-            <body>
-              <form action="/sign" method="post">
-                <div><textarea name="content" rows="3" cols="60"></textarea></div>
-                <div><input type="submit" value="Sign Guestbook"></div>
-              </form>
-            </body>
-          </html>""")
+class ApplicationHandler(webapp2.RequestHandler):
+    
+    """
+        Classe Base, Responsável pelas Requisições ao Servidor
+    """
+    def responseOk(self):
+        self.response.status_int = 200
+        self.response.headers['Content-Type'] = 'text/plain'
 
-
-class Guestbook(webapp2.RequestHandler):
+    """
+        Registra uma nova Chave
+    """
     def post(self):
-        self.response.out.write('<html><body>You wrote:<pre>')
-        self.response.out.write(cgi.escape(self.request.get('content')))
-        self.response.out.write('</pre></body></html>')
+        key = self.request.get('key')
+        
+        DataStore().register(key)
+        
+        self.responseOk()
 
-app = webapp2.WSGIApplication([('/', MainPage),
-                              ('/sign', Guestbook)],
-                              debug=True)
+    """
+        Desregistra uma Chave Existente
+    """
+    def delete(self):
+        key = self.request.get('key')
+        
+        DataStore().unregister(key)
+        
+        self.responseOk()
+  
+application = webapp2.WSGIApplication([('/',ApplicationHandler)],debug=True)
