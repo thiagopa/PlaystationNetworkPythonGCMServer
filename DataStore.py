@@ -1,3 +1,9 @@
+#-*- coding: utf-8 -*-
+
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
     Guardar as informações de chaves da aplicação 
 """
@@ -16,22 +22,22 @@ class DataStore :
     """
         Operações Para a Recuperação e Escrita das Chaves
     """
-    @db.transactional
     def register(self,key):
         """
             Registra a chave específica
         """ 
         k = MobileKey(value=key)
         k.put()
+	logger.debug("Register Mobile Key = %s" % (key))
         
-    @db.transactional
     def unregister(self,key):
         """
             Desregistra a chave específica
         """ 
-        k = MobileKey.all().filter("value =", key)
+	k = MobileKey.all().filter("value =", key).get()
         k.delete()
-        
+        logger.debug("Unregister Mobile Key = %s" % (key))
+
 
     def retrieve_api_key(self) :
         api_key = db.Key.from_path('ApiKey', 'access')
