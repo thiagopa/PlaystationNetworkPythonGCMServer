@@ -1,0 +1,1 @@
+PSN_WSDL = 'http://psnserverapi.appspot.com/PlaystationNetworkAPI?wsdl'

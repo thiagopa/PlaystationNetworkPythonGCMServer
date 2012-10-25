@@ -28,13 +28,13 @@ class DataStore :
         """ 
         k = MobileKey(value=key)
         k.put()
-	logger.debug("Register Mobile Key = %s" % (key))
+        logger.debug("Register Mobile Key = %s" % (key))
         
     def unregister(self,key):
         """
             Desregistra a chave específica
         """ 
-	k = MobileKey.all().filter("value =", key).get()
+        k = MobileKey.all().filter("value =", key).get()
         k.delete()
         logger.debug("Unregister Mobile Key = %s" % (key))
 
