@@ -7,7 +7,6 @@ from suds.client import Client
 from settings import *
 from messages import *
 from gcm import GCM
-import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -80,25 +79,26 @@ class FriendChecker(BaseApplicationHandler):
         
         friends = client.service.GetOnlineFriends()
         
-        data = []
-        
-        if any(data) :
+        if any(friends) :
 
+            gcm = GCM(self._dataStore.retrieve_api_key())
+            
             for friend in friends[0] :
+                
                 f = { 'PsnId' : friend.PsnId,
                      'AvatarSmall' : friend.AvatarSmall,
                      'Playing' :friend.Playing 
                 }
             
-                data.append(f)
-        
-            logger.debug(json.dumps(data))
-            
-            gcm = GCM(self._dataStore.retrieve_api_key())
-
-            response = gcm.json_request(registration_ids=devices, data=json.dumps(data))
-        
-            logger.debug(response)
+                response = gcm.json_request(registration_ids=devices, data=f)
+                
+                logger.debug("GCM Server Response : %s" % response)
+                
+                if 'errors' in response:
+                    logger.error("GCM Server is complaining, check the response!")
+                    self.responseMessage(500, "Sorry, Couldn't sync to the Mobile Device")
+                    return
+                
             self.responseOk()
         else :
             logger.debug(NO_FRIEND_ONLINE)        
