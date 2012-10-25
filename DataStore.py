@@ -38,8 +38,19 @@ class DataStore :
         k.delete()
         logger.debug("Unregister Mobile Key = %s" % (key))
 
-
     def retrieve_api_key(self) :
+	"""
+            Recupera a chave de ativação para da api
+	"""
         api_key = db.Key.from_path('ApiKey', 'access')
         return db.get(api_key)
+
+    def list_registered_devices(self) :
+	"""
+            Busca por todos os dispositivos registrados
+	"""
+        devices = []
+        for key in MobileKey.all() :
+            devices.append(key.value)
+        return devices
 
