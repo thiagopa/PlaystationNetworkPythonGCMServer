@@ -15,7 +15,7 @@ class AbstractKey(db.Model):
 class ApiKey(AbstractKey): pass
 class MobileKey(AbstractKey): pass  
 
-# k = ApiKey(key_name='access',browser='')
+# k = ApiKey(key_name='access',value='')
 # k.put()
 
 class DataStore :
@@ -43,7 +43,7 @@ class DataStore :
             Recupera a chave de ativação para da api
 	"""
         api_key = db.Key.from_path('ApiKey', 'access')
-        return db.get(api_key)
+        return db.get(api_key).value
 
     def list_registered_devices(self) :
 	"""
