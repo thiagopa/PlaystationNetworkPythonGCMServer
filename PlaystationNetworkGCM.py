@@ -102,7 +102,7 @@ class FriendChecker(BaseApplicationHandler):
                     """
                         Envia Email de Erro para Notificar o Mau funcionamento da API
                     """
-                    mail.send_mail(sender="PlaystationNetworkPythonGCMServer Support <support@psnservergcm.appspot.com>",
+                    mail.send_mail(sender="PlaystationNetworkPythonGCMServer Support <psnservergcm@appspot.gserviceaccount.com>",
                                    to="Thiago Pagonha <thi.pag@gmail.com>",
                                    subject="GCM Server is Complaining",
                                    body="""
