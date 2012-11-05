@@ -8,6 +8,7 @@ from settings import *
 from messages import *
 from gcm import GCM
 import logging
+from google.appengine.api import mail
 
 logger = logging.getLogger(__name__)
 
@@ -97,6 +98,30 @@ class FriendChecker(BaseApplicationHandler):
                 if 'errors' in response:
                     logger.error("GCM Server is complaining, check the response!")
                     self.responseMessage(500, "Sorry, Couldn't sync to the Mobile Device")
+                    
+                    """
+                        Envia Email de Erro para Notificar o Mau funcionamento da API
+                    """
+                    mail.send_mail(sender="PlaystationNetworkPythonGCMServer Support <support@psnservergcm.appspot.com>",
+                                   to="Thiago Pagonha <thi.pag@gmail.com>",
+                                   subject="GCM Server is Complaining",
+                                   body="""
+                                   There was an error during request phrase to GCM Server, details are as follow:
+                                   
+                                   gcm.json_request(registration_ids=devices, data=f)
+                                   
+                                   where
+                                   
+                                   devices = %s
+                                   data = %s
+                                   
+                                   which generated this server response:
+                                   
+                                   %s
+                                   
+                                   More details can be found at appengine.google.com
+                                   """ % (devices,f,response))
+                    
                     return
                 
             self.responseOk()
