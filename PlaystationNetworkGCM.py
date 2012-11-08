@@ -93,7 +93,8 @@ class FriendChecker(BaseApplicationHandler):
             
                 response = gcm.json_request(registration_ids=devices, data=f)
                 
-                logger.debug("GCM Server Response : %s" % response)
+		logger.debug("GCM Server Request is : %s for %s" % (f,devices) )
+                logger.debug("GCM Server Response is : %s" % response)
                 
                 if 'errors' in response:
                     logger.error("GCM Server is complaining, check the response!")
