@@ -2,3 +2,7 @@ cron:
 - description: sync request to psn api
   url: /whosonline
   schedule: every 15 minutes
+
+- description: verify integrity of api
+  url: /verifyintegrity
+  schedule: every 24 hours

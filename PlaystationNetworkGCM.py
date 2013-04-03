@@ -129,7 +129,32 @@ class FriendChecker(BaseApplicationHandler):
         else :
             logger.debug(NO_FRIEND_ONLINE)        
             self.notFound(NO_FRIEND_ONLINE)    
+
+
+class ApiIntegrityChecker(BaseApplicationHandler) :
+	"""
+		Classe que verifica a integridade do serviço
+	"""	
+	def get(self):
+		client = Client(PSN_WSDL, cache=MemCache())
+
+		myself = client.service.GetProfile("thi_pag")
+
+		if len(myself.PlayedGames.PlayedGame) == 0 :
+			mail.send_mail(sender="Thiago Pagonha <thi.pag@gmail.com>",
+                                   to="Thiago Pagonha <thi.pag@gmail.com>",
+                                   subject="PlaystationNetworkPythonGCMServer: PSN API is Offline",
+                                   body="""
+						Due to recent changes on instabilities on their system, 
+						PlaystationNetworkPythonAPI was unable to retrieve any games,
+						So Sorry. Please verify logs at appspot.
+					""")
+			self.notFound("Api Broken")
+		self.responseOk()
+
+		
   
 application = webapp2.WSGIApplication([('/',ApplicationHandler),
-                                       ('/whosonline',FriendChecker)]
+                                       ('/whosonline',FriendChecker),
+                                       ('/verifyintegrity', ApiIntegrityChecker)]
                                       ,debug=True)
