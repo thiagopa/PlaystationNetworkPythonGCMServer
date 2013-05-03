@@ -137,17 +137,16 @@ class ApiIntegrityChecker(BaseApplicationHandler) :
 	"""	
 	def get(self):
 		client = Client(PSN_WSDL, cache=MemCache())
-
-		myself = client.service.GetProfile("thi_pag")
-
-		if len(myself.PlayedGames.PlayedGame) == 0 :
+		try :
+			myself = client.service.GetProfile("thi_pag")
+		except Exception:
 			mail.send_mail(sender="Thiago Pagonha <thi.pag@gmail.com>",
-                                   to="Thiago Pagonha <thi.pag@gmail.com>",
-                                   subject="PlaystationNetworkPythonGCMServer: PSN API is Offline",
-                                   body="""
-						Due to recent changes on instabilities on their system, 
-						PlaystationNetworkPythonAPI was unable to retrieve any games,
-						So Sorry. Please verify logs at appspot.
+                			to="Thiago Pagonha <thi.pag@gmail.com>",
+                        		subject="PlaystationNetworkPythonGCMServer: PSN API is Offline",
+                                	body="""
+							Due to recent changes on instabilities on their system, 
+							PlaystationNetworkPythonAPI was unable to retrieve any games,
+							So Sorry. Please verify logs at appspot.
 					""")
 			self.notFound("Api Broken")
 		self.responseOk()
