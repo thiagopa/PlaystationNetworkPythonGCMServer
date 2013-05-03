@@ -26,6 +26,7 @@ class DataStore :
         """
             Registra a chave específica
         """ 
+        self.unregister_all()
         k = MobileKey(value=key)
         k.put()
         logger.debug("Register Mobile Key = %s" % (key))
@@ -53,4 +54,15 @@ class DataStore :
         for key in MobileKey.all() :
             devices.append(key.value)
         return devices
+    
+    def unregister_all(self):
+        """
+           Apaga todas as chaves
+        """
+        for key in MobileKey.all() :
+            key.delete()
+            logger.debug("Unregistering Mobile Key = %s" % (key.value))
+
+
+
 
